@@ -36,3 +36,53 @@ msg4
 msg1
 EMPTY QUEUE!
 ```
+
+### 解题思路
+
+使用按优先级升序的优先队列保存消息。`PUT` 插入消息和优先级，`GET` 取出堆顶；题目保证队列中优先级不重复，所以无需额外处理同优先级顺序。
+
+### 代码流程说明
+
+逐条处理指令：插入操作为 `O(log n)`，取出操作为 `O(log n)`；总时间复杂度 `O(n log n)`，空间复杂度 `O(n)`。
+
+### 代码实现
+
+```cpp
+#include <iostream>
+#include <queue>
+#include <string>
+using namespace std;
+struct Message{string name;int priority;bool operator>(const Message&x)const{return priority>x.priority;}};
+int main(){
+    ios::sync_with_stdio(false);cin.tie(nullptr);int n;cin>>n;
+    priority_queue<Message,vector<Message>,greater<Message>> q;string op;
+    while(n--){cin>>op;if(op=="PUT"){Message x;cin>>x.name>>x.priority;q.push(x);}else if(q.empty())cout<<"EMPTY QUEUE!\n";else cout<<q.top().name<<'\n',q.pop();}
+}
+```
+
+### 代码流程图
+
+```mermaid
+flowchart TD
+  A[读取指令] --> B{PUT 还是 GET?}
+  B -- PUT --> C[按优先级入堆]
+  B -- GET --> D{队列为空?}
+  D -- 是 --> E[输出 EMPTY QUEUE!]
+  D -- 否 --> F[输出并弹出最小优先级消息]
+  C --> A
+  F --> A
+```
+
+### 解题流程图
+
+```mermaid
+flowchart LR
+  A[消息与优先级] --> B[最小堆]
+  B --> C[最高优先级消息]
+```
+
+### 常见易错点
+
+- 优先级数值越小越先处理。
+- `GET` 空队列时输出完整的 `EMPTY QUEUE!`。
+- 消息名和优先级都要在 `PUT` 时保存。

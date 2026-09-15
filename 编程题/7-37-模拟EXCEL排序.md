@@ -28,3 +28,51 @@ Excel可以对一组纪录按任意指定列排序。现请编写程序实现类
 000007 James 85
 000010 Amy 90
 ```
+
+### 解题思路
+
+将记录保存为结构体，使用一次排序并定义复合比较器：列 1 比学号，列 2 比姓名，列 3 比成绩；主关键字相同则统一按学号升序。
+
+### 代码流程说明
+
+读入记录后根据 `c` 选择比较字段并排序。时间复杂度 `O(n log n)`，空间复杂度 `O(n)`。
+
+### 代码实现
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+struct Record{string id,name;int score;};
+int main(){ios::sync_with_stdio(false);cin.tie(nullptr);int n,c;cin>>n>>c;vector<Record>a(n);for(auto&x:a)cin>>x.id>>x.name>>x.score;
+    sort(a.begin(),a.end(),[&](const Record&x,const Record&y){if(c==1&&x.id!=y.id)return x.id<y.id;if(c==2&&x.name!=y.name)return x.name<y.name;if(c==3&&x.score!=y.score)return x.score<y.score;return x.id<y.id;});
+    for(auto&x:a)cout<<x.id<<' '<<x.name<<' '<<x.score<<'\n';
+}
+```
+
+### 代码流程图
+
+```mermaid
+flowchart TD
+  A[读入记录] --> B[选择排序列]
+  B --> C[主字段比较]
+  C --> D[相等时按学号比较]
+  D --> E[排序并输出]
+```
+
+### 解题流程图
+
+```mermaid
+flowchart LR
+  A[学生记录] --> B[复合比较器]
+  B --> C[稳定的排序顺序]
+  C --> D[输出记录]
+```
+
+### 常见易错点
+
+- 姓名按字典序，成绩按数值，不能统一按字符串比较。
+- 主关键字相同必须按学号升序。
+- 学号有前导零，输出和比较时应保留为字符串或按固定六位处理。
