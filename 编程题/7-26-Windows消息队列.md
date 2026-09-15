@@ -37,7 +37,7 @@ msg1
 EMPTY QUEUE!
 ```
 
-### 解题思路
+### 实现原理与解题思路
 
 使用按优先级升序的优先队列保存消息。`PUT` 插入消息和优先级，`GET` 取出堆顶；题目保证队列中优先级不重复，所以无需额外处理同优先级顺序。
 
@@ -48,15 +48,37 @@ EMPTY QUEUE!
 ### 代码实现
 
 ```cpp
+// 实现原理：
+// 使用按优先级升序的优先队列保存消息。`PUT` 插入消息和优先级，`GET` 取出堆顶；题目保证队列中优先级不重复，所以无需额外处理同优先级顺序。
+// 处理流程：
+// 逐条处理指令：插入操作为 `O(log n)`，取出操作为 `O(log n)`；总时间复杂度 `O(n log n)`，空间复杂度 `O(n)`。
 #include <iostream>
 #include <queue>
 #include <string>
 using namespace std;
-struct Message{string name;int priority;bool operator>(const Message&x)const{return priority>x.priority;}};
-int main(){
-    ios::sync_with_stdio(false);cin.tie(nullptr);int n;cin>>n;
-    priority_queue<Message,vector<Message>,greater<Message>> q;string op;
-    while(n--){cin>>op;if(op=="PUT"){Message x;cin>>x.name>>x.priority;q.push(x);}else if(q.empty())cout<<"EMPTY QUEUE!\n";else cout<<q.top().name<<'\n',q.pop();}
+struct Message {
+    string name;
+    int priority;
+    bool operator>(const Message& x) const { return priority > x.priority; }
+};
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int n;
+    cin >> n;
+    priority_queue<Message, vector<Message>, greater<Message>> q;
+    string op;
+    while (n--) {
+        cin >> op;
+        if (op == "PUT") {
+            Message x;
+            cin >> x.name >> x.priority;
+            q.push(x);
+        } else if (q.empty())
+            cout << "EMPTY QUEUE!\n";
+        else
+            cout << q.top().name << '\n', q.pop();
+    }
 }
 ```
 
